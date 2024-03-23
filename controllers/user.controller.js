@@ -37,3 +37,13 @@ module.exports.updateUser = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+module.exports.deleteUser = async (req, res) => {
+  if (!ObjectID.isValid(req.params.id))
+    return res.status(404).send("ID inconnu : " + req.params.id);
+  try {
+    await UserModel.deleteOne({ _id: req.params.id });
+    res.status(200).json({ message: "successfully deleted. " });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+};
