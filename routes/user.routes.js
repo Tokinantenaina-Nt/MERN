@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const authController = require("../controllers/auth.controller");
+const { signUp, signIn, logout } = require("../controllers/auth.controller");
 const {
   getAllUsers,
   userInfo,
@@ -9,7 +9,11 @@ const {
   unfollow
 } = require("../controllers/user.controller");
 
-router.post("/register", authController.signUp);
+//auth
+router.post("/register", signUp);
+router.post("/login", signIn);
+router.get("/logout", logout);
+//user DB
 router.get("/", getAllUsers);
 router.get("/:id", userInfo);
 router.put("/:id", updateUser);
