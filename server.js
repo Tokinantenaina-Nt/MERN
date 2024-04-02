@@ -1,5 +1,6 @@
 const express = require("express");
 const userRoutes = require("./routes/user.routes");
+const postRoutes = require("./routes/post.routes");
 require("dotenv").config({ path: "./config/.env" });
 require("./config/dbConnex");
 const PORT = process.env.PORT || 5000;
@@ -24,6 +25,7 @@ app.get("/jwtid", requireAuth, (req, res) => {
 
 //routes
 app.use("/api/user", userRoutes);
+app.use("/api/post", postRoutes);
 
 //server
 app.listen(PORT, () => {
