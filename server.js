@@ -8,7 +8,7 @@ const app = express();
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const { checkUser, requireAuth } = require("./middleware/auth.middleware");
-
+const upload_checking_error = require("./middleware/uploadError.middleware");
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -26,6 +26,9 @@ app.get("/jwtid", requireAuth, (req, res) => {
 //routes
 app.use("/api/user", userRoutes);
 app.use("/api/post", postRoutes);
+
+//middleware upload error
+app.use("*/upload", upload_checking_error);
 
 //server
 app.listen(PORT, () => {
