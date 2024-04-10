@@ -6,11 +6,10 @@ const {
   updateUser,
   deleteUser,
   follow,
-  unfollow
+  unfollow,
+  setPicturesUrl
 } = require("../controllers/user.controller");
-const upload = require("../controllers/upload.controller");
-const { uploadErrors } = require("../utils/errors.utils");
-
+const { uploadUser } = require("../controllers/upload.controller");
 router.post("/register", signUp);
 router.post("/login", signIn);
 router.get("/logout", logout);
@@ -23,7 +22,6 @@ router.delete("/:id", deleteUser);
 router.patch("/follow/:id", follow);
 router.patch("/unfollow/:id", unfollow);
 
-//upload
-router.post("/upload", upload.single("file"), (req, res) => {});
+router.post("/upload", uploadUser.single("file"), setPicturesUrl);
 
 module.exports = router;

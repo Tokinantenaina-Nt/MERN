@@ -1,21 +1,22 @@
 const multer = require("multer");
+const path = require("path");
 const allowedMimeTypes = ["image/jpeg", "image/jpg", "image/png"];
-const { uploadErrors } = require("../utils/errors.utils");
+let fileNamePostPath = "";
 
 const storage = multer.diskStorage({
   destination: function(req, file, cb) {
-    const uploadPath = `${__dirname}/../client/public/uploads/profil/`;
+    const uploadPath = path.join(
+      __dirname,
+      `../client/public/uploads/${folderName}/`
+    );
     cb(null, uploadPath);
   },
   filename: function(req, file, cb) {
-    const fileName = req.body.name + ".jpg";
-    if (!req.body.name) {
-      return cb(new Error("Missing field: name in request body"));
-    }
-    cb(null, fileName);
+    cb(null, fileNamePostPath);
   }
 });
-const upload = multer({
+
+const uploadUser = multer({
   storage: storage,
   limits: {
     fileSize: 512000
@@ -31,4 +32,4 @@ const upload = multer({
   }
 });
 
-module.exports = upload;
+module.exports = { uploadUser };

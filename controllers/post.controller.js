@@ -1,7 +1,7 @@
 const PostModel = require("../models/post.model");
 const UserModel = require("../models/user.model");
 const ObjectID = require("mongoose").Types.ObjectId;
-
+const { fileName } = require("./upload.controller");
 module.exports.readPost = (req, res) => {
   PostModel.find()
     .sort({ createdAt: -1 })
@@ -15,13 +15,17 @@ module.exports.readPost = (req, res) => {
 };
 
 module.exports.createPost = async (req, res) => {
+  console.log("fname : " + fileName(req));
+
   const newPost = new PostModel({
     posterId: req.body.posterId,
     message: req.body.message,
+    picture: req.file !== null ? "./uploads/posts/" + fileName(req) : "",
     video: req.body.video,
     likers: [],
     comments: []
   });
+
   try {
     const post = await newPost.save();
     return res.status(201).json(post);

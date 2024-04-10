@@ -95,3 +95,20 @@ module.exports.unfollow = async (req, res) => {
     return res.status(500).json({ error: error.message });
   }
 };
+module.exports.setPicturesUrl = async (req, res) => {
+  const fileName = req.body.name + ".jpg";
+  try {
+    const updatedUser = await UserModel.findByIdAndUpdate(
+      req.body.userId,
+      { $set: { picture: "./uploads/profil/" + fileName } },
+      { new: true, upsert: true, setDefaultsOnInsert: true }
+    );
+    if (!updatedUser) {
+      return res.status(404).send({ message: "User not found" });
+    }
+    res.send("updating file done");
+  } catch (err) {
+    console.error("Error updating user:", err);
+    res.status(500).send({ message: err });
+  }
+};
