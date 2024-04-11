@@ -1,15 +1,15 @@
 const multer = require("multer");
 const path = require("path");
 const allowedMimeTypes = ["image/jpeg", "image/jpg", "image/png"];
-let fileNameUser = "";
+let fileNamePath = "";
 
 const fileName = req => {
-  if (!fileNameUser && req.path.includes("upload"))
-    fileNameUser = req.body.name + ".jpg";
-  if (!fileNameUser && req.path === "/")
-    fileNameUser = req.body.posterId + Date.now() + ".jpg";
-  // else fileNameUser = "inini.jpeg";
-  return fileNameUser;
+  if (!fileNamePath && req.path === "/upload")
+    fileNamePath = req.body.name + ".jpg";
+  else if (!fileNamePath && req.path === "/")
+    fileNamePath = req.body.posterId + Date.now() + ".jpg";
+
+  return fileNamePath;
 };
 
 function storagePath(folder) {
