@@ -11,10 +11,11 @@ const {
   editCommentPost,
   deleteCommentPost
 } = require("../controllers/post.controller");
+const { uploadPost } = require("../controllers/upload.controller");
 
 //posts
 router.get("/", readPost);
-router.post("/", createPost);
+router.post("/", uploadPost.single("file"), createPost);
 router.put("/:id", updatePost);
 router.delete("/:id", deletePost);
 router.patch("/like-post/:id", likePost);

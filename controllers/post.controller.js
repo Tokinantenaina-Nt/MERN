@@ -15,8 +15,6 @@ module.exports.readPost = (req, res) => {
 };
 
 module.exports.createPost = async (req, res) => {
-  console.log("fname : " + fileName(req));
-
   const newPost = new PostModel({
     posterId: req.body.posterId,
     message: req.body.message,
