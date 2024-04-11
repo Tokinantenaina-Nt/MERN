@@ -3,12 +3,32 @@ const userRoutes = require("./routes/user.routes");
 const postRoutes = require("./routes/post.routes");
 require("dotenv").config({ path: "./config/.env" });
 require("./config/dbConnex");
-const PORT = process.env.PORT || 5000;
-const app = express();
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const { checkUser, requireAuth } = require("./middleware/auth.middleware");
+const app = express();
+const PORT = process.env.PORT || 5000;
+const cors = require("cors");
+
 const upload_checking_error = require("./middleware/uploadError.middleware");
+const allowedOrigins = ["http://localhost:3000"];
+const corsOptions = {
+  origin: function(origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+  allowedHeaders: ["sessionId", "Content-Type"],
+  exposedHeaders: ["sessionId"],
+  methods: ["GET", "POST", "PUT", "DELETE", "HEAD", "PATCH"],
+  preflightContinue: false
+};
+
+app.use(cors(corsOptions));
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
