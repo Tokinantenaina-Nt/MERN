@@ -11,17 +11,16 @@ const PORT = process.env.PORT || 5000;
 const cors = require("cors");
 
 const upload_checking_error = require("./middleware/uploadError.middleware");
-const allowedOrigins = [
-  "http://localhost:3000" /* ajouter l'URL à autoriser ici */
-];
+const allowedOrigins = "http://localhost:5173";
 const corsOptions = {
-  origin: function(origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
+  // origin: function(origin, callback) {
+  //   if (!origin || allowedOrigins.includes(origin)) {
+  //     callback(null, true);
+  //   } else {
+  //     callback(new Error("Not allowed by CORS"));
+  //   }
+  // },
+  origin: allowedOrigins,
   credentials: true,
   allowedHeaders: ["sessionId", "Content-Type"],
   exposedHeaders: ["sessionId"],

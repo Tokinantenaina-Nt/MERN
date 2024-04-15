@@ -106,7 +106,7 @@ module.exports.setPicturesUrl = async (req, res) => {
     if (!updatedUser) {
       return res.status(404).send({ message: "User not found" });
     }
-    res.send("updating file done");
+    res.json({ message: "updating file done" });
   } catch (err) {
     console.error("Error updating user:", err);
     res.status(500).send({ message: err });
