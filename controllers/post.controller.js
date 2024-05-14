@@ -2,6 +2,7 @@ const PostModel = require("../models/post.model");
 const UserModel = require("../models/user.model");
 const ObjectID = require("mongoose").Types.ObjectId;
 const { fileName } = require("./upload.controller");
+
 module.exports.readPost = (req, res) => {
   PostModel.find()
     .sort({ createdAt: -1 })
@@ -15,19 +16,20 @@ module.exports.readPost = (req, res) => {
 };
 
 module.exports.createPost = async (req, res) => {
-  const newPost = new PostModel({
+  console.log("gfileS ,", fileName(req).fileNamePathPost);
+  const newPost = await new PostModel({
     posterId: req.body.posterId,
     message: req.body.message,
-    picture: req.file !== null ? "./uploads/posts/" + fileName(req) : "",
+    picture: "./uploads/posts/" + fileName(req).fileNamePathPost,
     video: req.body.video,
     likers: [],
     comments: []
   });
-
   try {
     const post = await newPost.save();
     return res.status(201).json(post);
   } catch (err) {
+    console.log(err);
     return res.status(400).send(err);
   }
 };
@@ -46,7 +48,9 @@ module.exports.updatePost = async (req, res) => {
     res.send(updatedPost);
   } catch (err) {
     console.error("Erreur lors de la mise à jour du message :", err);
-    res.status(500).send("Erreur lors de la mise à jour du message");
+    res
+      .status(500)
+      .send({ message: "Erreur lors de la mise à jour du message" });
   }
 };
 module.exports.deletePost = async (req, res) => {
@@ -55,10 +59,10 @@ module.exports.deletePost = async (req, res) => {
 
   try {
     await PostModel.findByIdAndDelete(req.params.id);
-    res.status(200).send("Suppression réussie");
+    res.status(200).send({ message: "Suppression réussie" });
   } catch (error) {
     console.error("Erreur lors de la suppression du post :", error);
-    res.status(500).send("Erreur lors de la suppression du post");
+    res.status(500).send({ message: "Erreur lors de la suppression du post" });
   }
 };
 module.exports.likePost = async (req, res) => {
@@ -131,16 +135,16 @@ module.exports.createCommentPost = async (req, res) => {
 };
 module.exports.editCommentPost = async (req, res) => {
   if (!ObjectID.isValid(req.params.id))
-    return res.status(404).send("ID inconnu : " + req.params.id);
+    return res.status(404).send({ message: "ID inconnu " });
 
   try {
     const post = await PostModel.findById(req.params.id);
-    if (!post) return res.status(404).send("Post not found");
+    if (!post) return res.status(404).send({ message: "Post not found" });
 
     const comment = post.comments.find(comment =>
       comment._id.equals(req.body.commentId)
     );
-    if (!comment) return res.status(404).send("Comment not found");
+    if (!comment) return res.status(404).send({ message: "Comment not found" });
 
     comment.text = req.body.text;
     await post.save();
@@ -153,12 +157,12 @@ module.exports.editCommentPost = async (req, res) => {
 
 module.exports.deleteCommentPost = async (req, res) => {
   if (!ObjectID.isValid(req.params.id))
-    return res.status(404).send("ID inconnu : " + req.params.id);
+    return res.status(404).send({ message: "ID inconnu" });
   try {
     await PostModel.findByIdAndUpdate(req.params.id, {
-      $pull: { comments: { _id: req.body.comentId } }
+      $pull: { comments: { _id: req.body.commentId } }
     });
-    res.send("deleted succesfully");
+    res.send({ message: "deleted succesfully" });
   } catch (err) {
     return res.status(500).send(err);
   }

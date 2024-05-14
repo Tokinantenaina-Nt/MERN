@@ -40,7 +40,7 @@ app.get("/jwtid", requireAuth, (req, res) => {
   if (res.locals.user) {
     res.status(200).send(res.locals.user._id);
   } else {
-    res.status(401).send("Utilisateur non authentifié");
+    res.status(401).json({ message: "Utilisateur non authentifié" });
   }
 });
 

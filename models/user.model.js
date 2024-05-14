@@ -35,7 +35,7 @@ const userSchema = new mongoose.Schema(
     },
     picture: {
       type: String,
-      default: "./upload/userRandom.jpg"
+      default: "./uploads/profil/random-user.png"
     },
     following: {
       type: [String]

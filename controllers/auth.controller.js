@@ -13,7 +13,7 @@ module.exports.signUp = async (req, res) => {
     res.status(201).json({ user: newUser._id });
   } catch (err) {
     const errors = signUpErr(err);
-    res.status(500).send({ errors });
+    res.status(500).send({ err });
   }
 };
 

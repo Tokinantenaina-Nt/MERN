@@ -1,31 +1,53 @@
 const multer = require("multer");
 const path = require("path");
 const allowedMimeTypes = ["image/jpeg", "image/jpg", "image/png"];
-let fileNamePath = "";
-
+let fileNamePathPost = "";
+let fileNamePathProfil = "";
 const fileName = req => {
-  if (!fileNamePath && req.path === "/upload")
-    fileNamePath = req.body.name + ".jpg";
-  else if (!fileNamePath && req.path === "/")
-    fileNamePath = req.body.posterId + Date.now() + ".jpg";
-
-  return fileNamePath;
+  if (!fileNamePathPost || !fileNamePathProfil) {
+    fileNamePathPost = req.body.posterId + Date.now() + ".jpg";
+    fileNamePathProfil = req.body.name + ".jpg";
+    return { fileNamePathPost, fileNamePathProfil };
+  } else {
+    setTimeout(() => {
+      fileNamePathPost = "";
+      fileNamePathProfil = "";
+    }, 1000);
+  }
+  return { fileNamePathPost, fileNamePathProfil };
 };
 
 function storagePath(folder) {
-  const storage = multer.diskStorage({
-    destination: function(req, file, cb) {
-      const uploadPath = path.join(
-        __dirname,
-        `../client/public/uploads/${folder}/`
-      );
-      cb(null, uploadPath);
-    },
-    filename: function(req, file, cb) {
-      cb(null, fileName(req));
-    }
-  });
-  return storage;
+  if (folder === "posts") {
+    const storage = multer.diskStorage({
+      destination: function(req, file, cb) {
+        const uploadPath = path.join(
+          __dirname,
+          `../client/public/uploads/${folder}/`
+        );
+        cb(null, uploadPath);
+      },
+      filename: function(req, file, cb) {
+        cb(null, fileName(req).fileNamePathPost);
+      }
+    });
+    return storage;
+  }
+  if (folder === "profil") {
+    const storage = multer.diskStorage({
+      destination: function(req, file, cb) {
+        const uploadPath = path.join(
+          __dirname,
+          `../client/public/uploads/${folder}/`
+        );
+        cb(null, uploadPath);
+      },
+      filename: function(req, file, cb) {
+        cb(null, fileName(req).fileNamePathProfil);
+      }
+    });
+    return storage;
+  }
 }
 
 const uploadUser = multer({

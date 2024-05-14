@@ -96,7 +96,7 @@ module.exports.unfollow = async (req, res) => {
   }
 };
 module.exports.setPicturesUrl = async (req, res) => {
-  const fileName = req.body.name + ".jpg";
+  let fileName = req.body.name + ".jpg";
   try {
     const updatedUser = await UserModel.findByIdAndUpdate(
       req.body.userId,
@@ -106,9 +106,10 @@ module.exports.setPicturesUrl = async (req, res) => {
     if (!updatedUser) {
       return res.status(404).send({ message: "User not found" });
     }
-    res.json({ message: "updating file done" });
+    res.send(updatedUser);
   } catch (err) {
     console.error("Error updating user:", err);
     res.status(500).send({ message: err });
   }
+  fileName = "";
 };
